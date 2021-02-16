@@ -1,0 +1,26 @@
+import json
+import re
+from datetime import datetime as dt
+
+def check(in_string):
+    timetable = {}
+    status = False
+    print("Arrival time test:")
+    for item in in_string:
+        timetable.setdefault(item["bus_id"], [])
+        timetable[item["bus_id"]].append([item["stop_name"], item["a_time"]])
+    for bus_id, stop_list in timetable.items():
+        for i, elem in enumerate(stop_list[1:], start=1):
+            if dt.strptime(elem[1], "%H:%M") < dt.strptime(stop_list[i - 1][1], "%H:%M"):
+                print(f"bus_id line {bus_id}: wrong time on station {elem[0]}")
+                status = True
+                break
+    if not status:
+        print("OK")
+
+
+json_list = json.loads(input())
+errors = check(json_list)
+
+# print('Format validation: {} errors\nstop_name: {}\n'
+# 'stop_type: {}\na_time: {}'.format(sum(errors), *errors))
