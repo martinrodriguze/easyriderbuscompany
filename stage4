@@ -1,0 +1,45 @@
+import json
+
+
+def check(in_string):
+    err_bus_id, err_stop_id, err_stop_name, err_next_stop, err_stop_type, err_a_time = 0, 0, 0, 0, 0, 0
+    chk_route_start, chk_route_finish = [], []
+    start_stops, trans_stops, finish_stops = [], [], []
+    all_bus_route = []
+    all_start_finish = ['Bourbon Street', 'Pilotow Street', 'Prospekt Avenue',
+                       'Elm Street', 'Sesame Street', 'Sunset Boulevard', "Fifth Avenue"]
+    all_trans_stops = ['Elm Street', 'Sesame Street', 'Sunset Boulevard']
+    # check every element in json string
+    # each block represents checks for one field (bus_id/stop_id/etc)
+    for item in in_string:
+        all_bus_route.append(item['bus_id'])
+        if item['stop_type'] == 'S':
+            start_stops.append(item['stop_name'])
+            chk_route_start.append(item['bus_id'])
+        elif item['stop_type'] == 'F':
+            finish_stops.append(item['stop_name'])
+            chk_route_finish.append(item['bus_id'])
+        if item['stop_type'] != 'S':
+            if item['stop_name'] == 'Elm Street' or item['stop_name'] == 'Sesame Street' or item['stop_name'] == 'Sunset Boulevard' or item['stop_name'] == 'Prospekt Avenue':
+                trans_stops.append(item['stop_name'])
+
+    for x in all_bus_route:
+        if x not in chk_route_start:
+            print('There is no start or end stop for the line: {}'.format(x))
+            exit()
+        if x not in chk_route_finish:
+            print('There is no start or end stop for the line: {}'.format(x))
+            exit()
+
+    start_stops = sorted(list(set(start_stops)))
+    trans_stops = sorted(list(set(trans_stops)))
+    finish_stops = sorted(list(set(finish_stops)))
+    print('Start stops: {} {}\nTransfer stops: {} {}\nFinish stops: {} {}'
+          .format(len(start_stops), start_stops, len(trans_stops), trans_stops, len(finish_stops), finish_stops))
+
+
+json_list = json.loads(input())
+errors = check(json_list)
+
+# print('Format validation: {} errors\nstop_name: {}\n'
+# 'stop_type: {}\na_time: {}'.format(sum(errors), *errors))
