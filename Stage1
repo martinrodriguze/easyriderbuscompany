@@ -1,0 +1,126 @@
+import json
+
+
+def check(in_string):
+    # errors counters
+    err_bus_id, err_stop_id, err_stop_name, err_next_stop, err_stop_type, err_a_time = 0, 0, 0, 0, 0, 0
+
+    # check every element in json string
+    # each block represents checks for one field (bus_id/stop_id/etc)
+    for item in in_string:
+
+        if type(item['bus_id']) != int:
+            err_bus_id += 1
+
+        if type(item['stop_id']) != int:
+            err_stop_id += 1
+
+        if not item['stop_name']:
+            err_stop_name += 1
+        elif type(item['stop_name']) != str:
+            err_stop_name += 1
+
+        if type(item['next_stop']) != int:
+            err_next_stop += 1
+
+        if not item['stop_type']:
+            pass
+        elif type(item['stop_type']) != str:
+            err_stop_type += 1
+        elif len(item['stop_type']) != 1:
+            err_stop_type += 1
+
+        if not item['a_time']:
+            err_a_time += 1
+        elif type(item['a_time']) != str:
+            err_a_time += 1
+
+    return [err_bus_id, err_stop_id, err_stop_name, err_next_stop, err_stop_type, err_a_time]
+
+
+json_list = [
+    {
+        "bus_id": 128,
+        "stop_id": 1,
+        "stop_name": "Prospekt Av.",
+        "next_stop": 3,
+        "stop_type": "S",
+        "a_time": "08:12"
+    },
+    {
+        "bus_id": 128,
+        "stop_id": 3,
+        "stop_name": "Elm Street",
+        "next_stop": 5,
+        "stop_type": "",
+        "a_time": "8:19"
+    },
+    {
+        "bus_id": 128,
+        "stop_id": 5,
+        "stop_name": "Fifth Avenue",
+        "next_stop": 7,
+        "stop_type": "OO",
+        "a_time": "08:25"
+    },
+    {
+        "bus_id": 128,
+        "stop_id": 7,
+        "stop_name": "Sesame Street",
+        "next_stop": 0,
+        "stop_type": "F",
+        "a_time": "08:77"
+    },
+    {
+        "bus_id": 256,
+        "stop_id": 2,
+        "stop_name": "Pilotow Street",
+        "next_stop": 3,
+        "stop_type": "S",
+        "a_time": "09:20"
+    },
+    {
+        "bus_id": 256,
+        "stop_id": 3,
+        "stop_name": "Elm",
+        "next_stop": 6,
+        "stop_type": "",
+        "a_time": "09:45"
+    },
+    {
+        "bus_id": 256,
+        "stop_id": 6,
+        "stop_name": "Sunset Boulevard",
+        "next_stop": 7,
+        "stop_type": "A",
+        "a_time": "09:59"
+    },
+    {
+        "bus_id": 256,
+        "stop_id": 7,
+        "stop_name": "Sesame Street",
+        "next_stop": 0,
+        "stop_type": "F",
+        "a_time": "10.12"
+    },
+    {
+        "bus_id": 512,
+        "stop_id": 4,
+        "stop_name": "bourbon street",
+        "next_stop": 6,
+        "stop_type": "S",
+        "a_time": "38:13"
+    },
+    {
+        "bus_id": 512,
+        "stop_id": 6,
+        "stop_name": "Sunset Boulevard",
+        "next_stop": 0,
+        "stop_type": "F",
+        "a_time": "08:16"
+    }
+]
+errors = check(json_list)
+
+print('Type and required field validation: {} errors\nbus_id: {}\nstop_id: {}\nstop_name: {}\
+\nnext_stop: {}\nstop_type: {}\na_time: {}'.format(sum(errors), *errors))
